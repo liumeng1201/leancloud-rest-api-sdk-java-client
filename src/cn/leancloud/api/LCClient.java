@@ -1,16 +1,18 @@
 package cn.leancloud.api;
 
 
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+
 import cn.leancloud.api.exception.APIException;
 import cn.leancloud.api.http.NativeHttpClient;
 import cn.leancloud.api.http.ResponseWrapper;
 import cn.leancloud.api.model.BaseResult;
 import cn.leancloud.api.model.LCInstallation;
 import cn.leancloud.api.push.PushPayload;
-import com.google.gson.Gson;
-import org.apache.log4j.Logger;
 
-import java.util.Map;
+import com.google.gson.Gson;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,14 +23,16 @@ import java.util.Map;
  */
 public class LCClient {
     private static final Logger LOG = Logger.getLogger(LCClient.class);
-    public final static String API_URL = "https://leancloud.cn/1.1/";
-    public final static String MODULE_INSTALLATIONS_PATH = "installations";
-    public final static String MODULE_PUSH_PATH = "push";
+    private final static String API_URL = "https://leancloud.cn/1.1/";
+    private final static String MODULE_INSTALLATIONS_PATH = "installations";
+    private final static String MODULE_PUSH_PATH = "push";
 
     private String id;
     private String key;
     private NativeHttpClient client;
     private boolean apnsProduction = false;
+    
+    private Gson gson;
 
     public LCClient(String id, String key) {
         this(id, key, false);
@@ -39,18 +43,23 @@ public class LCClient {
         this.key = key;
         this.apnsProduction = apnsProduction;
         client = new NativeHttpClient(id, key);
+        gson = new Gson();
     }
-
 
     public ResponseWrapper post(String path, Map data) throws APIException {
         String url = API_URL + path;
-        String contont = new Gson().toJson(data);
+        String contont = gson.toJson(data);
         return client.sendPost(url, contont);
+    }
+    
+    public ResponseWrapper post(String path, String data) throws APIException {
+        String url = API_URL + path;
+        return client.sendPost(url, data);
     }
 
     public ResponseWrapper put(String path, Map data) throws APIException {
         String url = API_URL + path;
-        String contont = new Gson().toJson(data);
+        String contont = gson.toJson(data);
         return client.sendPost(url, contont);
     }
 
@@ -65,6 +74,11 @@ public class LCClient {
     }
 
     public LCInstallation installationsCreate(Map data) throws APIException {
+        ResponseWrapper res = post(MODULE_INSTALLATIONS_PATH, data);
+        return LCInstallation.fromResponse(res, LCInstallation.class);
+    }
+    
+    public LCInstallation installationsCreate(String data) throws APIException {
         ResponseWrapper res = post(MODULE_INSTALLATIONS_PATH, data);
         return LCInstallation.fromResponse(res, LCInstallation.class);
     }

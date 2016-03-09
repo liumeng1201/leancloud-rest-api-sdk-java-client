@@ -1,8 +1,12 @@
 package cn.leancloud.api.http;
 
 import cn.leancloud.api.exception.APIException;
+import cn.leancloud.api.utils.StringUtils;
+
 import org.apache.log4j.Logger;
+
 import javax.net.ssl.*;
+
 import java.io.*;
 import java.net.*;
 import java.security.cert.CertificateException;
@@ -89,8 +93,12 @@ public class NativeHttpClient implements IHttpClient {
             conn.setRequestProperty("Connection", "Keep-Alive");
             conn.setRequestProperty("Accept-Charset", CHARSET);
             conn.setRequestProperty("Charset", CHARSET);
-            conn.setRequestProperty("X-AVOSCloud-Application-Id", id);
-            conn.setRequestProperty("X-AVOSCloud-Application-Key", key);
+            if (!StringUtils.isEmpty(id)) {
+            	conn.setRequestProperty("X-AVOSCloud-Application-Id", id);
+            }
+            if (!StringUtils.isEmpty(key)) {
+            	conn.setRequestProperty("X-AVOSCloud-Application-Key", key);
+            }
 
             if (RequestMethod.GET == method) {
                 conn.setDoOutput(false);
