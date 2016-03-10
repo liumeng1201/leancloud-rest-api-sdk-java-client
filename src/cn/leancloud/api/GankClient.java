@@ -1,34 +1,58 @@
 package cn.leancloud.api;
 
-import org.apache.log4j.Logger;
-
 import cn.leancloud.api.exception.APIException;
 import cn.leancloud.api.http.NativeHttpClient;
 import cn.leancloud.api.http.ResponseWrapper;
-import cn.leancloud.api.model.LCInstallation;
-import cn.leancloud.api.model.gank.GankResponse;
+import cn.leancloud.api.model.gank.GankHistoryResponse;
+import cn.leancloud.api.model.gank.GankPostsResponse;
 
 import com.google.gson.Gson;
 
 public class GankClient {
-	private static final Logger LOG = Logger.getLogger(LCClient.class);
-    public final static String API_URL = "http://gank.io/api/day/";
+	private final String GANK_BASE_URL = "http://gank.io/api/day/";
 
-    private NativeHttpClient client;
-    private Gson gson;
+	private NativeHttpClient client;
+	private Gson gson;
 
-    public GankClient() {
-        client = new NativeHttpClient(null, null);
-        gson = new Gson();
-    }
+	public GankClient() {
+		client = new NativeHttpClient(null, null);
+		gson = new Gson();
+	}
 
-    public ResponseWrapper get(String path) throws APIException {
-        String url = API_URL + path;
-        return client.sendGet(url);
-    }
-    
-    public GankResponse getPostsByDay(String day) throws APIException {
-        ResponseWrapper res = get(day);
-        return LCInstallation.fromResponse(res, GankResponse.class);
-    }
+	public ResponseWrapper get(String path) throws APIException {
+		String url = GANK_BASE_URL + path;
+		return client.sendGet(url);
+	}
+
+	public GankPostsResponse getPostsByDay(String day) throws APIException {
+		ResponseWrapper res = get(day);
+		return fromResponse(res, GankPostsResponse.class);
+	}
+
+	public GankHistoryResponse getPostsHistory() throws APIException {
+		ResponseWrapper res = get("history");
+		return fromResponse(res, GankHistoryResponse.class);
+	}
+	
+	private <T> T fromResponse(ResponseWrapper responseWrapper, Class<T> clazz) {
+		T result = null;
+
+		if (responseWrapper.isServerResponse()) {
+			String responseContent = responseWrapper.responseContent;
+			responseContent = responseContent.replaceAll("_id", "id");
+			responseContent = responseContent.replaceAll("_ns", "ns");
+			responseContent = responseContent.replaceAll("createdAt", "time");
+			result = gson.fromJson(responseContent, clazz);
+		} else {
+			try {
+				result = clazz.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+	}
 }

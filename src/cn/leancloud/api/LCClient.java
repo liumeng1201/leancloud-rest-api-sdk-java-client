@@ -3,14 +3,10 @@ package cn.leancloud.api;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
-
 import cn.leancloud.api.exception.APIException;
 import cn.leancloud.api.http.NativeHttpClient;
 import cn.leancloud.api.http.ResponseWrapper;
-import cn.leancloud.api.model.BaseResult;
-import cn.leancloud.api.model.LCInstallation;
-import cn.leancloud.api.push.PushPayload;
+import cn.leancloud.api.model.gank.PostItem;
 
 import com.google.gson.Gson;
 
@@ -22,16 +18,10 @@ import com.google.gson.Gson;
  * To change this template use File | Settings | File Templates.
  */
 public class LCClient {
-    private static final Logger LOG = Logger.getLogger(LCClient.class);
     private final static String API_URL = "https://leancloud.cn/1.1/";
-    private final static String MODULE_INSTALLATIONS_PATH = "installations";
-    private final static String MODULE_PUSH_PATH = "push";
+    private final static String MODULE_ADD_POST_PATH = "classes/GankPosts";
 
-    private String id;
-    private String key;
     private NativeHttpClient client;
-    private boolean apnsProduction = false;
-    
     private Gson gson;
 
     public LCClient(String id, String key) {
@@ -39,9 +29,6 @@ public class LCClient {
     }
 
     public LCClient(String id, String key, boolean apnsProduction) {
-        this.id = id;
-        this.key = key;
-        this.apnsProduction = apnsProduction;
         client = new NativeHttpClient(id, key);
         gson = new Gson();
     }
@@ -62,6 +49,11 @@ public class LCClient {
         String contont = gson.toJson(data);
         return client.sendPost(url, contont);
     }
+    
+    public ResponseWrapper put(String path, String data) throws APIException {
+        String url = API_URL + path;
+        return client.sendPost(url, data);
+    }
 
     public ResponseWrapper get(String path) throws APIException {
         String url = API_URL + path;
@@ -73,45 +65,27 @@ public class LCClient {
         return client.sendDelete(url);
     }
 
-    public LCInstallation installationsCreate(Map data) throws APIException {
-        ResponseWrapper res = post(MODULE_INSTALLATIONS_PATH, data);
-        return LCInstallation.fromResponse(res, LCInstallation.class);
+    public PostItem addPost(String data) throws APIException {
+        ResponseWrapper res = post(MODULE_ADD_POST_PATH, data);
+        return fromResponse(res, PostItem.class);
     }
     
-    public LCInstallation installationsCreate(String data) throws APIException {
-        ResponseWrapper res = post(MODULE_INSTALLATIONS_PATH, data);
-        return LCInstallation.fromResponse(res, LCInstallation.class);
-    }
+    private <T> T fromResponse(ResponseWrapper responseWrapper, Class<T> clazz) {
+		T result = null;
 
-    public BaseResult sendNotificationAlertWithObjectId(String alert, String objectId) throws APIException {
-        PushPayload payload = PushPayload.newBuilder()
-                .setProd(apnsProduction)
-                .setAlert(alert)
-                .setObjectId(objectId)
-                .build();
-        ResponseWrapper res = post(MODULE_PUSH_PATH, payload.toMap());
-        return BaseResult.fromResponse(res, BaseResult.class);
-    }
+		if (responseWrapper.isServerResponse()) {
+			String responseContent = responseWrapper.responseContent;
+			result = gson.fromJson(responseContent, clazz);
+		} else {
+			try {
+				result = clazz.newInstance();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
 
-    public BaseResult sendNotificationAlertWithObjectId(String alert, Map data, String objectId) throws APIException {
-        PushPayload payload = PushPayload.newBuilder()
-                .setProd(apnsProduction)
-                .setAlert(alert)
-                .setData(data)
-                .setObjectId(objectId)
-                .build();
-        ResponseWrapper res = post(MODULE_PUSH_PATH, payload.toMap());
-        return BaseResult.fromResponse(res, BaseResult.class);
-    }
-
-    public BaseResult sendNotificationObjectId(Map data, String objectId) throws APIException {
-        PushPayload payload = PushPayload.newBuilder()
-                .setProd(apnsProduction)
-                .setData(data)
-                .setObjectId(objectId)
-                .build();
-        ResponseWrapper res = post(MODULE_PUSH_PATH, payload.toMap());
-        return BaseResult.fromResponse(res, BaseResult.class);
-    }
-
+		return result;
+	}
 }

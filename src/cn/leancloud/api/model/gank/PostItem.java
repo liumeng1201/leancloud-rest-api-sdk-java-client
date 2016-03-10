@@ -1,9 +1,11 @@
 package cn.leancloud.api.model.gank;
 
-public class PostItem {
-	private String _id;
-	private String _ns;
-	private String createdAt;
+import cn.leancloud.api.model.BaseResult;
+
+public class PostItem extends BaseResult {
+	private String id;
+	private String ns;
+	private String time;
 	private String desc;
 	private String publishedAt;
 	private String type;
@@ -11,28 +13,28 @@ public class PostItem {
 	private boolean used;
 	private String who;
 
-	public String get_id() {
-		return _id;
+	public String getId() {
+		return id;
 	}
 
-	public void set_id(String _id) {
-		this._id = _id;
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public String get_ns() {
-		return _ns;
+	public String getNs() {
+		return ns;
 	}
 
-	public void set_ns(String _ns) {
-		this._ns = _ns;
+	public void setNs(String ns) {
+		this.ns = ns;
 	}
 
-	public String getCreatedAt() {
-		return createdAt;
+	public String getTime() {
+		return time;
 	}
 
-	public void setCreatedAt(String createdAt) {
-		this.createdAt = createdAt;
+	public void setTime(String time) {
+		this.time = time;
 	}
 
 	public String getDesc() {

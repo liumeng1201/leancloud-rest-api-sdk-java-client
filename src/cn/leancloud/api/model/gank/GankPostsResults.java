@@ -2,7 +2,7 @@ package cn.leancloud.api.model.gank;
 
 import java.util.List;
 
-public class GankResponseResults {
+public class GankPostsResults {
 	public List<PostItem> Android;
 	public List<PostItem> iOS;
 	public List<PostItem> 前端;

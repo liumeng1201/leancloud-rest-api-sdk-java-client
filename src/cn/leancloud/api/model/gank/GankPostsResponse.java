@@ -2,10 +2,10 @@ package cn.leancloud.api.model.gank;
 
 import java.util.List;
 
-public class GankResponse {
+public class GankPostsResponse {
 	private List<String> category;
 	private boolean error;
-	private GankResponseResults results;
+	private GankPostsResults results;
 
 	public List<String> getCategory() {
 		return category;
@@ -23,11 +23,11 @@ public class GankResponse {
 		this.error = error;
 	}
 
-	public GankResponseResults getResults() {
+	public GankPostsResults getResults() {
 		return results;
 	}
 
-	public void setResults(GankResponseResults results) {
+	public void setResults(GankPostsResults results) {
 		this.results = results;
 	}
 }
