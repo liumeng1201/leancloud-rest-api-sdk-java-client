@@ -48,6 +48,7 @@ public class LCClientTest {
 	
 	@Test
 	public void addMultiPost() throws Exception {
+		// 一次添加多个post
 		GankPostsResponse response = gankClient.getPostsByDay("2016/03/10");
 		GankPostsResults posts = response.getResults();
 		String data = gson.toJson(opt(posts.iOS));
