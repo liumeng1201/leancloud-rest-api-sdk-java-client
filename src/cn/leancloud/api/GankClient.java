@@ -8,6 +8,11 @@ import cn.leancloud.api.model.gank.GankPostsResponse;
 
 import com.google.gson.Gson;
 
+/**
+ * 负责从gank.io网站获取数据
+ * 
+ * @author liumeng
+ */
 public class GankClient {
 	private final String GANK_BASE_URL = "http://gank.io/api/day/";
 
@@ -33,7 +38,7 @@ public class GankClient {
 		ResponseWrapper res = get("history");
 		return fromResponse(res, GankHistoryResponse.class);
 	}
-	
+
 	private <T> T fromResponse(ResponseWrapper responseWrapper, Class<T> clazz) {
 		T result = null;
 
@@ -41,7 +46,8 @@ public class GankClient {
 			String responseContent = responseWrapper.responseContent;
 			responseContent = responseContent.replaceAll("_id", "postId");
 			responseContent = responseContent.replaceAll("_ns", "ns");
-			responseContent = responseContent.replaceAll("createdAt", "postTime");
+			responseContent = responseContent.replaceAll("createdAt",
+					"postTime");
 			result = gson.fromJson(responseContent, clazz);
 		} else {
 			try {

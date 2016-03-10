@@ -54,17 +54,15 @@ public class NativeHttpClient implements IHttpClient {
 		return doRequest(url, null, RequestMethod.DELETE);
 	}
 
-	public ResponseWrapper sendPost(String url, String content)
-			throws APIException {
+	public ResponseWrapper sendPost(String url, String content) throws APIException {
 		return doRequest(url, content, RequestMethod.POST);
 	}
 
-	public ResponseWrapper sendPut(String url) throws APIException {
-		return doRequest(url, null, RequestMethod.PUT);
+	public ResponseWrapper sendPut(String url, String content) throws APIException {
+		return doRequest(url, content, RequestMethod.PUT);
 	}
 
-	public ResponseWrapper doRequest(String url, String content,
-			RequestMethod method) throws APIException {
+	public ResponseWrapper doRequest(String url, String content, RequestMethod method) throws APIException {
 		ResponseWrapper response = null;
 		for (int retryTimes = 0;; retryTimes++) {
 			try {
@@ -78,8 +76,7 @@ public class NativeHttpClient implements IHttpClient {
 		return response;
 	}
 
-	private ResponseWrapper _doRequest(String url, String content,
-			RequestMethod method) throws APIException, SocketTimeoutException {
+	private ResponseWrapper _doRequest(String url, String content, RequestMethod method) throws APIException, SocketTimeoutException {
 
 		HttpURLConnection conn = null;
 		OutputStream out = null;
@@ -109,7 +106,7 @@ public class NativeHttpClient implements IHttpClient {
 				conn.setDoOutput(false);
 			} else if (RequestMethod.DELETE == method) {
 				conn.setDoOutput(false);
-			} else if (RequestMethod.POST == method) {
+			} else if (RequestMethod.POST == method || RequestMethod.PUT == method) {
 				conn.setDoOutput(true);
 				conn.setRequestProperty("Content-Type", CONTENT_TYPE_JSON);
 				byte[] data = content.getBytes(CHARSET);

@@ -1,8 +1,6 @@
 package cn.leancloud.api.model.gank;
 
-import cn.leancloud.api.model.BaseResult;
-
-public class PostItem extends BaseResult {
+public class PostItem {
 	private String postId;
 	private String ns;
 	private String postTime;

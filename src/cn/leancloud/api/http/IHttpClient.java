@@ -59,7 +59,7 @@ public interface IHttpClient {
     public ResponseWrapper sendPost(String url, String content) 
             throws APIException;
 
-    public ResponseWrapper sendPut(String url)
+    public ResponseWrapper sendPut(String url, String content)
             throws APIException;
     
 
