@@ -22,6 +22,9 @@ public class LCClient {
 	private final String MODULE_QUERY_POST_PATH = "classes/GankPosts?";
 	private final String MODULE_DEL_POST_PATH = "classes/GankPosts/";
 	private final String MODULE_GET_ALL_POST_PATH = "classes/GankPosts";
+	
+	private final String MODULE_BATCH_PATH = "batch";
+	public static final String MODULE_MULTIREQUEST_ADD_PATH = "/1.1/classes/GankPosts";
 
 	private NativeHttpClient client;
 	private Gson gson;
@@ -104,6 +107,14 @@ public class LCClient {
 	public LCResponse<PostItem> getPostsByWhere(String where) throws APIException {
 		ResponseWrapper res = get(MODULE_QUERY_POST_PATH + "where=" + where);
 		return gson.fromJson(res.responseContent, new TypeToken<LCResponse<PostItem>>() {}.getType());
+	}
+	
+	/**
+	 * 批量操作
+	 */
+	public String MultiOpt(String data) throws APIException {
+		ResponseWrapper res = post(MODULE_BATCH_PATH, data);
+		return res.responseContent;
 	}
 
 	private <T> T fromResponse(ResponseWrapper responseWrapper, Class<T> clazz) {

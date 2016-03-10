@@ -82,6 +82,11 @@ public class NativeHttpClient implements IHttpClient {
 		OutputStream out = null;
 		StringBuffer sb = new StringBuffer();
 		ResponseWrapper wrapper = new ResponseWrapper();
+		
+		LOG.debug("Send request - " + method.toString() + " " + url);
+        if (null != content) {
+            LOG.debug("Request Content - " + content);
+        }
 
 		try {
 			URL aUrl = new URL(url);

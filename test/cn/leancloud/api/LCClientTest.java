@@ -1,12 +1,18 @@
 package cn.leancloud.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
+import cn.leancloud.api.http.IHttpClient.RequestMethod;
 import cn.leancloud.api.model.gank.GankPostsResponse;
 import cn.leancloud.api.model.gank.GankPostsResults;
 import cn.leancloud.api.model.gank.PostItem;
+import cn.leancloud.api.model.lc.MultiRequest;
+import cn.leancloud.api.model.lc.MultiRequestItem;
 
 import com.google.gson.Gson;
 
@@ -29,6 +35,7 @@ public class LCClientTest {
 		gson = new Gson();
 	}
 
+	/*
 	@Test
 	public void getPostsFromGankIOByDay() throws Exception {
 		GankPostsResponse response = gankClient.getPostsByDay("2016/03/10");
@@ -37,6 +44,29 @@ public class LCClientTest {
 			String data = gson.toJson(item);
 			lcClient.addPost(data);
 		}
+	}*/
+	
+	@Test
+	public void addMultiPost() throws Exception {
+		GankPostsResponse response = gankClient.getPostsByDay("2016/03/10");
+		GankPostsResults posts = response.getResults();
+		String data = gson.toJson(opt(posts.iOS));
+		String result = lcClient.MultiOpt(data);
+		LOG.debug(result);
+	}
+	
+	private MultiRequest<PostItem> opt(List<PostItem> datas) {
+		List<MultiRequestItem<PostItem>> requests = new ArrayList<MultiRequestItem<PostItem>>();
+		for (PostItem data : datas) {
+			MultiRequestItem<PostItem> item = new MultiRequestItem<PostItem>();
+			item.setMethod(RequestMethod.POST.name());
+			item.setPath(LCClient.MODULE_MULTIREQUEST_ADD_PATH);
+			item.setBody(data);
+			requests.add(item);
+		}
+		MultiRequest<PostItem> request = new MultiRequest<PostItem>();
+		request.setRequests(requests);
+		return request;
 	}
 	
 	/*
