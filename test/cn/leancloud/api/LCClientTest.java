@@ -29,26 +29,39 @@ public class LCClientTest {
 		gson = new Gson();
 	}
 
-	/*
 	@Test
 	public void getPostsFromGankIOByDay() throws Exception {
 		GankPostsResponse response = gankClient.getPostsByDay("2016/03/10");
 		GankPostsResults posts = response.getResults();
-		for (PostItem item : posts.Android) {
+		for (PostItem item : posts.iOS) {
 			String data = gson.toJson(item);
 			lcClient.addPost(data);
-			Thread.sleep(50);
 		}
-	}*/
+	}
 	
+	/*
 	@Test
 	public void updatePostsFromLCByobjectId() throws Exception {
 		PostItem item = lcClient.getPost("56e1253a5bbb50004cd3d776");
-		LOG.debug("getPostsFromLCByobjectId ~ " + gson.toJson(item));
 		item.setWho("123qwe");
 		String updateContent = gson.toJson(item);
 		item = lcClient.updatePost("56e1253a5bbb50004cd3d776", updateContent);
-		LOG.debug("updatePostsFromLCByobjectId ~ " + gson.toJson(item));
 	}
 
+	@Test
+	public void getAllPostFromLC() throws Exception {
+		LCResponse<PostItem> results = lcClient.getAllPosts();
+		LOG.debug("getAllPostFromLC ~ " + results.getResults().size());
+	}
+
+	@Test
+	public void getPostFromLCByWhere() throws Exception {
+		PostItem item = new PostItem();
+		item.setType("Android");
+		String where = gson.toJson(item);
+		LOG.debug(where);
+		LCResponse<PostItem> results = lcClient.getPostsByWhere(where);
+		LOG.debug("getAllPostFromLC ~ " + results.getResults().size());
+	}
+	 */
 }

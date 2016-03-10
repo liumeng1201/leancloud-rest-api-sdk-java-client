@@ -4,8 +4,10 @@ import cn.leancloud.api.exception.APIException;
 import cn.leancloud.api.http.NativeHttpClient;
 import cn.leancloud.api.http.ResponseWrapper;
 import cn.leancloud.api.model.gank.PostItem;
+import cn.leancloud.api.model.lc.LCResponse;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 /**
  * 负责对leancloud服务进行读写查询操作
@@ -88,9 +90,9 @@ public class LCClient {
 	/**
 	 * 获取所有的posts
 	 */
-	public ResponseWrapper getAllPosts() throws APIException {
+	public LCResponse<PostItem> getAllPosts() throws APIException {
 		ResponseWrapper res = get(MODULE_GET_ALL_POST_PATH);
-		return res;
+		return gson.fromJson(res.responseContent, new TypeToken<LCResponse<PostItem>>() {}.getType());
 	}
 
 	/**
@@ -99,9 +101,9 @@ public class LCClient {
 	 * @param where
 	 *            查询条件
 	 */
-	public ResponseWrapper getPostsBy(String where) throws APIException {
+	public LCResponse<PostItem> getPostsByWhere(String where) throws APIException {
 		ResponseWrapper res = get(MODULE_QUERY_POST_PATH + "where=" + where);
-		return res;
+		return gson.fromJson(res.responseContent, new TypeToken<LCResponse<PostItem>>() {}.getType());
 	}
 
 	private <T> T fromResponse(ResponseWrapper responseWrapper, Class<T> clazz) {

@@ -8,7 +8,6 @@ public class PostItem {
 	private String publishedAt;
 	private String type;
 	private String url;
-	private boolean used;
 	private String who;
 
 	public String getNs() {
@@ -49,14 +48,6 @@ public class PostItem {
 
 	public void setUrl(String url) {
 		this.url = url;
-	}
-
-	public boolean isUsed() {
-		return used;
-	}
-
-	public void setUsed(boolean used) {
-		this.used = used;
 	}
 
 	public String getWho() {
