@@ -39,9 +39,9 @@ public class GankClient {
 
 		if (responseWrapper.isServerResponse()) {
 			String responseContent = responseWrapper.responseContent;
-			responseContent = responseContent.replaceAll("_id", "id");
+			responseContent = responseContent.replaceAll("_id", "postId");
 			responseContent = responseContent.replaceAll("_ns", "ns");
-			responseContent = responseContent.replaceAll("createdAt", "time");
+			responseContent = responseContent.replaceAll("createdAt", "postTime");
 			result = gson.fromJson(responseContent, clazz);
 		} else {
 			try {

@@ -3,9 +3,9 @@ package cn.leancloud.api.model.gank;
 import cn.leancloud.api.model.BaseResult;
 
 public class PostItem extends BaseResult {
-	private String id;
+	private String postId;
 	private String ns;
-	private String time;
+	private String postTime;
 	private String desc;
 	private String publishedAt;
 	private String type;
@@ -13,28 +13,12 @@ public class PostItem extends BaseResult {
 	private boolean used;
 	private String who;
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public String getNs() {
 		return ns;
 	}
 
 	public void setNs(String ns) {
 		this.ns = ns;
-	}
-
-	public String getTime() {
-		return time;
-	}
-
-	public void setTime(String time) {
-		this.time = time;
 	}
 
 	public String getDesc() {
@@ -83,5 +67,21 @@ public class PostItem extends BaseResult {
 
 	public void setWho(String who) {
 		this.who = who;
+	}
+
+	public String getPostTime() {
+		return postTime;
+	}
+
+	public void setPostTime(String postTime) {
+		this.postTime = postTime;
+	}
+
+	public String getPostId() {
+		return postId;
+	}
+
+	public void setPostId(String postId) {
+		this.postId = postId;
 	}
 }
