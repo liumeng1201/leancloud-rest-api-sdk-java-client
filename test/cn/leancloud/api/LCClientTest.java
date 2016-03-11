@@ -7,8 +7,14 @@ import org.javalite.activejdbc.Base;
 import org.junit.Before;
 import org.junit.Test;
 
-import cn.leancloud.api.model.test.Employee;
+import cn.leancloud.api.exception.APIException;
+import cn.leancloud.api.model.gank.GankHistoryResponse;
+import cn.leancloud.api.model.gank.GankPostsResponse;
+import cn.leancloud.api.model.gank.GankPostsResults;
+import cn.leancloud.api.model.gank.PostItem;
+import cn.leancloud.api.model.test.GankPost;
 import cn.leancloud.api.model.test.MakeInstrumentationUtil;
+import cn.leancloud.api.utils.ListUtils;
 
 import com.google.gson.Gson;
 
@@ -31,6 +37,7 @@ public class LCClientTest {
 		gson = new Gson();
 	}
 	
+	/*
 	@Test
 	public void dbTest() throws Exception {
 		MakeInstrumentationUtil.make();
@@ -42,6 +49,48 @@ public class LCClientTest {
 		
 		List<Employee> employees = Employee.findAll();
 		LOG.debug(employees.size());
+	}*/
+	
+	@Test
+	public void addPostToDB() throws Exception {
+		MakeInstrumentationUtil.make();
+		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/test", "root", "rootroot");
+		
+		GankHistoryResponse response = gankClient.getPostsHistory();
+		for (String day : response.getResults()) {
+			day = day.replaceAll("-", "/");
+			getDataByDay(day);
+			Thread.sleep(5000);
+		}
+	}
+	
+	private void getDataByDay(String day) throws APIException {
+		GankPostsResponse response = gankClient.getPostsByDay(day);
+		GankPostsResults posts = response.getResults();
+		saveData(posts.Android);
+		saveData(posts.iOS);
+		saveData(posts.前端);
+		saveData(posts.休息视频);
+		saveData(posts.拓展资源);
+		saveData(posts.福利);
+	}
+	
+	private void saveData(List<PostItem> datas) {
+		if (ListUtils.isEmpty(datas)) {
+			return;
+		}
+		for (PostItem item : datas) {
+			GankPost e = new GankPost();
+			e.set("postId", item.getPostId());
+			e.set("ns", item.getNs());
+			e.set("postTime", item.getPostTime());
+			e.set("description", item.getDesc());
+			e.set("publishedAt", item.getPublishedAt());
+			e.set("type", item.getType());
+			e.set("url", item.getUrl());
+			e.set("who", item.getWho());
+			e.saveIt();
+		}
 	}
 
 	/*
@@ -50,16 +99,14 @@ public class LCClientTest {
 		LCResponse<PostItem> results = lcClient.getAllPosts();
 		LOG.debug("getAllPostFromLC ~ " + results.getResults().size());
 		
-		/*
 		GankHistoryResponse response = gankClient.getPostsHistory();
 		for (String day : response.getResults()) {
 			day = day.replaceAll("-", "/");
 			addMultiPostByDay(day);
 			Thread.sleep(10000);
 		}
-	}*/
+	}
 	
-	/*
 	// 一次添加多个post
 	public void addMultiPostByDay(String day) throws APIException {
 		GankPostsResponse response = gankClient.getPostsByDay(day);
