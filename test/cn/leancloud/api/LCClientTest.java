@@ -64,8 +64,8 @@ public class LCClientTest {
 	@Test
 	public void addPostToDB() throws Exception {
 		MakeInstrumentationUtil.make();
-		// Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://db4free.net/gankapp", "liumeng1201", "liumeng1201");
-		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/test", "root", "rootroot");
+		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://db4free.net/gankapp", "liumeng1201", "liumeng1201");
+		// Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/test", "root", "rootroot");
 		
 		GankHistoryResponse response = gankClient.getPostsHistory();
 		for (String day : response.getResults()) {
