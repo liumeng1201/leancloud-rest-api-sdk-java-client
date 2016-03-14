@@ -1,5 +1,7 @@
 package cn.leancloud.api;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -54,6 +56,7 @@ public class LCClientTest {
 	@Test
 	public void addPostToDB() throws Exception {
 		MakeInstrumentationUtil.make();
+		// Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://db4free.net/gankapp", "liumeng1201", "liumeng1201");
 		Base.open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/test", "root", "rootroot");
 		
 		GankHistoryResponse response = gankClient.getPostsHistory();
@@ -64,7 +67,7 @@ public class LCClientTest {
 		}
 	}
 	
-	private void getDataByDay(String day) throws APIException {
+	private void getDataByDay(String day) throws Exception {
 		GankPostsResponse response = gankClient.getPostsByDay(day);
 		GankPostsResults posts = response.getResults();
 		saveData(posts.Android);
@@ -75,11 +78,14 @@ public class LCClientTest {
 		saveData(posts.福利);
 	}
 	
-	private void saveData(List<PostItem> datas) {
+	private void saveData(List<PostItem> datas) throws SQLException {
 		if (ListUtils.isEmpty(datas)) {
 			return;
 		}
+		
+		PreparedStatement ps = Base.startBatch("insert into gank_posts (postId, ns, postTime, description, publishedAt, type, url, who) values(?, ?, ?, ?, ?, ?, ?, ?)");
 		for (PostItem item : datas) {
+			/*
 			GankPost e = new GankPost();
 			e.set("postId", item.getPostId());
 			e.set("ns", item.getNs());
@@ -90,7 +96,11 @@ public class LCClientTest {
 			e.set("url", item.getUrl());
 			e.set("who", item.getWho());
 			e.saveIt();
+			*/
+			Base.addBatch(ps, item.getPostId(), item.getNs(), item.getPostTime(), item.getDesc(), item.getPublishedAt(), item.getType(), item.getUrl(), item.getWho());
 		}
+		Base.executeBatch(ps);
+		ps.close();
 	}
 
 	/*
