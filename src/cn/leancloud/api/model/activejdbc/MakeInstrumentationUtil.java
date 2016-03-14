@@ -1,4 +1,4 @@
-package cn.leancloud.api.model.test;
+package cn.leancloud.api.model.activejdbc;
 
 import org.javalite.instrumentation.Instrumentation;
 

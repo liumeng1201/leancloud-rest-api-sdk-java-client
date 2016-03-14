@@ -1,22 +1,14 @@
 package cn.leancloud.api.model.gank;
 
 public class PostItem {
-	private String postId;
-	private String ns;
-	private String postTime;
+	private String _id;
+	private String _ns;
+	private String createdAt;
 	private String desc;
 	private String publishedAt;
 	private String type;
 	private String url;
 	private String who;
-
-	public String getNs() {
-		return ns;
-	}
-
-	public void setNs(String ns) {
-		this.ns = ns;
-	}
 
 	public String getDesc() {
 		return desc;
@@ -58,19 +50,28 @@ public class PostItem {
 		this.who = who;
 	}
 
-	public String getPostTime() {
-		return postTime;
+	public String getId() {
+		return _id;
 	}
 
-	public void setPostTime(String postTime) {
-		this.postTime = postTime;
+	public void setId(String _id) {
+		this._id = _id;
 	}
 
-	public String getPostId() {
-		return postId;
+	public String getNs() {
+		return _ns;
 	}
 
-	public void setPostId(String postId) {
-		this.postId = postId;
+	public void setNs(String _ns) {
+		this._ns = _ns;
 	}
+
+	public String getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(String createdAt) {
+		this.createdAt = createdAt;
+	}
+
 }
