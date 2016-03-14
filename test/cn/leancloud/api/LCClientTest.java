@@ -2,7 +2,6 @@ package cn.leancloud.api;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -11,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import cn.leancloud.api.model.activejdbc.GankPost;
-import cn.leancloud.api.model.activejdbc.GankPostTable;
 import cn.leancloud.api.model.activejdbc.MakeInstrumentationUtil;
 import cn.leancloud.api.model.gank.GankHistoryResponse;
 import cn.leancloud.api.model.gank.GankPostsResponse;
@@ -61,9 +59,7 @@ public class LCClientTest {
 			posts.add(pi);
 		}
 		LOG.debug(posts.size());
-		LOG.debug(gson.toJson(posts.get(2)));
-	}
-	*/
+	}*/
 
 	@Test
 	public void addPostToDB() throws Exception {
@@ -74,18 +70,32 @@ public class LCClientTest {
 		GankHistoryResponse response = gankClient.getPostsHistory();
 		for (String day : response.getResults()) {
 			getDataByDay(day);
-			Thread.sleep(5000);
+			Thread.sleep(1000);
 		}
 	}
 	
 	private void getDataByDay(String day) throws Exception {
+		List<GankPost> result = GankPost.where("day = ?", day);
+		if (!ListUtils.isEmpty(result)) {
+			if (result.size() > 0) {
+				// day天数据已经存在
+				LOG.debug(day + " already exist"); 
+				return;
+			}
+		}
+		
 		GankPostsResponse response = gankClient.getPostsByDay(day.replaceAll("-", "/"));
 		GankPostsResults posts = response.getResults();
 		saveData(posts.Android, day);
+		Thread.sleep(500);
 		saveData(posts.iOS, day);
+		Thread.sleep(500);
 		saveData(posts.前端, day);
+		Thread.sleep(500);
 		saveData(posts.休息视频, day);
+		Thread.sleep(500);
 		saveData(posts.拓展资源, day);
+		Thread.sleep(500);
 		saveData(posts.福利, day);
 	}
 	

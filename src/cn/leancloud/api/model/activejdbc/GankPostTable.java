@@ -9,4 +9,5 @@ public class GankPostTable {
 	public static final String TYPE = "type";
 	public static final String URL = "url";
 	public static final String WHO = "who";
+	public static final String DAY = "day";
 }
